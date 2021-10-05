@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endpoints y datos en tiempo real</title>
+</head>
+<body>
+  <div>
+    <div class="last-update">
+      Última actualización del dashboard: <span class="last-update-value"></span>
+    </div>
+    <div class="current-users">
+      Usuarios actualmente conectados al dashboard: <span class="current-users-value">0</span>
+    </div>
+    <div class="dashboard">
+      <pre class="db-data"></pre>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" integrity="sha512-iZIBSs+gDyTH0ZhUem9eQ1t4DcEn2B9lHxfRMeGQhyNdSUz+rb+5A3ummX6DQTOIs1XK0gOteOg/LPtSo9VJ+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    // Nos conectame al servidor que hemos levantado en localhost:3000
+    // Al ser el mismo servidor quien gestiona o sirve los estáticos y el WebSocket no necesitamos especificar nada
+    const socket = io();
+
+    // Message handler: cuando se recibe el mensaje "message" se muestra por consola y se envía un ACK ilustrativo
+    socket.on('message', (msg) => {
+      console.log('Mensaje websocket recibido: ', msg);
+      socket.emit('message:ACK', {});
+    });
+
+    // Message handler: cuando se reciba un "users-new-conn" se mostrará una traza informativa
+    socket.on('users:new-conn', (payload) => console.log('Nuevo usuario conectado', payload));
+
+    // Message handler: cuando se reciba un "users-total-users" se actualizará el contador de usuarios conectados
+    const totalUsers = document.querySelector('.current-users-value');  // Cachear referencia al DOM
+    socket.on('users:total-users', (currentTotalUsers) => {
+      console.log('Total de usuarios actuales: ', currentTotalUsers);
+      totalUsers.innerHTML = currentTotalUsers
+
+    });
+
+    // Message handler: cuando se reciba un "data:update" refrescamos la información para mostrarla actualizada en tiempo real
+    const lastUpdate = document.querySelector('.last-update-value');
+    socket.on('data:update', (payload) => {
+      console.log('data update received: ', payload);
+      lastUpdate.innerHTML = new Date(payload.timestamp);
+      updateDashboard(payload);
+    });
+
+    // Llamada API: consumo de un endpoint HTTP a través del método GET
+    // Aunque buscar por id es más eficiente, para este ejemplo nos vale un query selector basado en clases
+    const dashboard = document.querySelector('.dashboard > .db-data');
+    fetch('/api/dashboard')
+      .then(response => response.json())
+      .then(d => {
+        console.log('DATA: ', d.data);
+        updateDashboard(d.data);
+      })
+      .catch(error => alert('Hubo un error al consumir el endpoint'));
+
+    // Creamos una función para facilitar el refresco de la información en la página
+    function updateDashboard(dataToDisplayFormatted = {}) {
+      dashboard.innerHTML = JSON.stringify(dataToDisplayFormatted, null, 2);
+    }
+  </script>
+</body>
+</html>

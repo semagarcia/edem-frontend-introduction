@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDEM Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="content-wrapper">
+    <!-- Instead of <header> -->
+    <div class="header">
+      <div class="menu-icon">
+        <svg viewBox="0 0 100 80" width="18" height="18">
+          <rect width="100" height="20"></rect>
+          <rect y="30" width="100" height="20"></rect>
+          <rect y="60" width="100" height="20"></rect>
+        </svg>
+      </div>
+      <div class="title">EDEM Dashboard</div>
+      <div class="separator"></div>
+      <div class="clock"></div>
+    </div>
+
+    <div class="dashboard">
+      <div class="row first-row">
+        <div class="col col-1">
+          <div class="kpi-value">
+            <span id="kpi1" class="value">0</span>
+            <span class="label">req/seg</span>
+          </div>
+          <div class="kpi-label">Peticiones API de producto</div>
+        </div>
+        <div class="col col-2">
+          <div class="kpi-value">
+            <span id="kpi2" class="value">0</span>
+            <span class="label">€</span>
+          </div>
+          <div class="kpi-label">Beneficio obtenido</div>
+        </div>
+      </div>
+      <div class="row second-row">
+        <div class="col col-1">KPI 3</div>
+        <div class="col col-2">KPI 4</div>
+      </div>
+      <div class="row third-row">
+        <div class="col col-1">KPI 5</div>
+        <div class="col col-2">KPI 6</div>
+      </div>
+    </div>
+
+    <!-- Instead of <footer> -->
+    <div class="footer">
+      EDEM - Master Big Data - 9 de Julio de 2021
+    </div>
+  </div>
+
+  <script>
+    // Obtenemos una referencia al "reloj"
+    const clock = document.querySelector('.clock');
+
+    // Esta función hará el cálculo y el formateo de la hora en formato hh:mm:ss
+    function updateClock() {
+      const d = new Date();
+      let now = String(d.getHours() < 10 ? '0'+d.getHours() : d.getHours());
+      now = now.concat(':').concat(d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes());
+      now = now.concat(':').concat(d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds());
+      clock.innerHTML = now;
+    }
+
+    // Si no hacemos esta llamada, hasta que no pasase un segundo, no se pintaría la hora actual
+    updateClock();
+
+    // Planificamos que cada 1000ms se ejecute la función "updateClock"
+    setInterval(updateClock, 1000);
+
+    // A modo de ejemplo, se actualizarán con valores aleatorios los dos primeros KPIs
+    const kpi1 = document.querySelector('#kpi1');
+    const kpi2 = document.querySelector('#kpi2');
+
+    // Esta función nos generará números aleatorios dentro de un rango dado
+    // Por defecto, si no pasamos ningún parámetro, tomará el rango [0, 1]
+    const generateRandom = (min = 0, max = 1) => Math.floor(Math.random() * (max - min) + min);
+    let currentRevenueForKpi2 = 0;
+    setInterval(() => {
+      // Para simular peticiones por segundo a nuestro backend de producto, entre [1000, 2000]
+      kpi1.innerHTML = generateRandom(1000, 2000);
+
+      // Para simular un incremento del beneficio derivado de esas peticiones por segundo
+      currentRevenueForKpi2 += generateRandom(1, 5);
+      kpi2.innerHTML = currentRevenueForKpi2;
+    }, 2000);
+  </script>
+</body>
+</html>

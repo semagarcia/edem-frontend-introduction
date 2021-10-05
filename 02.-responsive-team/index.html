@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Article</title>
+  <style>
+    .article-container {
+      display: flex;
+      flex-direction: column;
+    }
+    @media screen and (min-width: 991px) and (max-width: 1199px) {
+      .article-container { margin: 0 auto; width: 80%; }
+    }
+    @media screen and (min-width: 1200px) {
+      .article-container { margin: 0 auto; max-width: 1080px; }
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title {
+      display: flex;
+      font-size: 40px;
+    }
+
+    .subtitle {
+      display: flex;
+      font-size: 28px;
+    }
+
+    .metadata {
+      display: flex;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .author,
+    .published-on {
+      font-weight: 700;
+      padding: 0 4px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    .intro-image {
+      display: flex;
+      width: 100%;
+    }
+
+    .content-article-image {
+      width: 100%;
+    }
+    @media screen and (max-width: 599px) {
+      .mobile { display: flex; }
+      .tablet, .desktop, .large-desktop { display: none; }
+    }
+    @media screen and (min-width: 600px) and (max-width: 991px) {
+      .tablet { display: flex; }
+      .mobile, .desktop, .large-desktop { display: none; }
+    }
+    @media screen and (min-width: 992px) and (max-width: 1199px) {
+      .desktop { display: flex; }
+      .mobile, .tablet, .large-desktop { display: none; }
+    }
+    @media screen and (min-width: 1200px) {
+      .large-desktop { display: flex; }
+      .mobile, .tablet, .desktop { display: none; }
+    }
+
+    .text-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column-separator-for-high-widths {
+      display: flex;
+      width: 0;
+    }
+
+    .left-column, .right-column {
+      display: flex;
+      flex-direction: column;
+    }
+    @media screen and (min-width: 992px) {
+      .text-content { flex-direction: row; }
+      .column-separator-for-high-widths { width: 32px; }
+      .left-column, .right-column { flex: 1; width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Este contenedor permite que el contenido ocupe todo el ancho o, tal y como se pide en el ejercicio
+    complementario, hacer que el ancho no crezca más y se quede centrado, dejando espacio en blanco en los
+    laterales -->
+  <div class="article-container">
+    <!-- Típica cabecera de cualquier artículo -->
+    <div class="header">
+      <div class="title">Un lorem ipsum mítico</div>
+      <div class="subtitle">La potencia de CSS aplicado al diseño responsivo</div>
+      <div class="metadata">
+        Publicado por <span class="author">Sema García</span>
+        el <span class="published-on">09 de Julio de 2021</span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="intro-image">
+        <!-- Añadimos todas las imágenes, pero controlamos su visibilidad mediante media-queries -->
+        <img class="content-article-image mobile" src="images/team-mobile.jpg" />
+        <img class="content-article-image tablet" src="images/team-tablet.jpg" />
+        <img class="content-article-image desktop" src="images/team-desktop.png" />
+        <img class="content-article-image large-desktop" src="images/team-large-desktop.jpg" />
+      </div>
+
+      <!-- Aquí empieza el contenido del artículo, que debemos organizar en una o dos columnas, según
+        el dispositivo en el que nos encontremos -->
+      <div class="text-content">
+        <div class="left-column">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin odio mi, facilisis ut urna vel, iaculis dapibus
+            elit.
+            Praesent in mattis dolor. Aenean eget metus eu quam tempor scelerisque nec id lectus. Etiam sit amet ipsum sed
+            nunc
+            faucibus lacinia. Nulla semper tellus nibh, quis blandit velit malesuada sed. Suspendisse facilisis dolor
+            lacinia,
+            eleifend elit sit amet, lobortis enim. Curabitur sed eros ut purus faucibus imperdiet a id tellus. Integer
+            ornare mi
+            vitae justo pretium pulvinar vitae sit amet eros. Phasellus commodo dui tortor, ut faucibus ex vehicula
+            tincidunt.
+            Donec in tellus aliquet, interdum nisl et, consequat lacus. Curabitur efficitur tellus sit amet placerat
+            interdum.
+            Ut dignissim pretium dolor. Suspendisse gravida consectetur interdum.
+          </p>
+
+          <p>Curabitur sapien ipsum, efficitur ac velit sit amet, pellentesque vehicula arcu. Donec vel interdum eros.
+            Nunc
+            lacinia, ex quis ullamcorper malesuada, arcu nisi varius lectus, porttitor vulputate velit nulla ac urna.
+            Suspendisse potenti. Sed ultrices condimentum sem. Vivamus metus dui, scelerisque non aliquet in, porta quis
+            metus.</p>
+
+          <p>Praesent eu nisl ac urna iaculis ullamcorper ac condimentum lacus.</p>
+
+          <p>Aenean id varius arcu. Curabitur feugiat erat elit, at ultrices nisi ultrices vestibulum. Pellentesque in
+            felis
+            sed
+            ligula euismod posuere. Duis condimentum nulla vitae dolor mattis ultricies. Maecenas et justo ac nisl
+            facilisis
+            rutrum non eu neque. Aenean aliquet ante quam, sed tincidunt velit iaculis ut. Integer lacinia consequat nibh
+            sed
+            aliquam.</p>
+
+          <p>Nunc non mauris laoreet, vehicula urna vitae, dignissim nisl. Vestibulum sit amet justo bibendum nulla
+            porttitor
+            blandit id ut dui. Ut ullamcorper ante vel neque vulputate dictum ac nec diam. Pellentesque pulvinar nibh
+            odio,
+            faucibus viverra lacus condimentum at. Vivamus lectus massa, volutpat sit amet dapibus nec, luctus id velit.
+            Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce in gravida
+            urna.</p>
+        </div>
+
+        <!-- Este div es para mejorar el aspecto, y que las dos columnas no aparezcan tan juntas -->
+        <div class="column-separator-for-high-widths"></div>
+
+        <div class="right-column">
+          <p>Fusce sit amet orci nibh. Aliquam a lobortis sem. Proin ligula turpis, egestas et augue quis, maximus congue
+            erat.
+            Aliquam consectetur maximus aliquet. Curabitur imperdiet dapibus augue, malesuada pellentesque mauris feugiat
+            vitae.
+            Aenean facilisis auctor viverra. Quisque imperdiet, massa in condimentum porttitor, orci lectus luctus purus,
+            eget
+            vestibulum erat justo blandit purus. Suspendisse quis risus neque. Cras ullamcorper lacus egestas, porta mi
+            at,
+            luctus turpis. Sed enim purus, semper eu sapien sed, dictum luctus lorem. Nam tincidunt sagittis lectus vitae
+            euismod. Sed vitae nibh mollis orci facilisis viverra. Proin nec suscipit turpis. Nulla et placerat orci,
+            fermentum
+            consectetur sapien. Integer vehicula porta dolor tristique rhoncus. Nulla ultrices ex aliquam augue volutpat
+            lobortis.</p>
+
+          <p>Aliquam metus quam, fermentum commodo laoreet rhoncus, facilisis at neque. Fusce placerat, orci sit amet
+            volutpat
+            congue, elit nisl consectetur nisi, ac eleifend elit justo nec dolor. Nulla ut tempus orci, et pharetra nisl.
+            Nulla
+            sollicitudin pulvinar odio a molestie. Phasellus congue tortor erat, eget venenatis enim accumsan lobortis.
+            Nam
+            quis
+            lectus et enim lacinia consectetur. Donec interdum laoreet tortor non scelerisque. Maecenas vitae ligula est.
+            Phasellus ullamcorper blandit felis, et interdum turpis. Curabitur tristique metus eget dui consectetur, at
+            pharetra
+            felis suscipit. Suspendisse dapibus in massa eget euismod. Quisque a tellus eget odio imperdiet auctor.</p>
+
+          <p>Vivamus dapibus finibus est vitae luctus. Quisque ut quam sit amet leo congue sodales ac ac ipsum. Fusce
+            interdum
+            rhoncus libero, nec pulvinar ligula rutrum ut. Maecenas gravida pulvinar lorem et blandit. Mauris et congue
+            ipsum.
+            Sed est urna, ultricies vitae purus et, ultricies tristique tortor. Morbi dapibus, eros vel tincidunt
+            fringilla,
+            metus nisi sodales ex, ut convallis diam felis quis purus. Vestibulum tincidunt efficitur dolor vitae varius.
+            Mauris
+            bibendum fringilla justo, commodo gravida ipsum porttitor id.</p>
+
+          <p>Nulla dapibus pretium ligula, ut consectetur urna aliquam eget. Maecenas sollicitudin ante elit. Pellentesque
+            nec
+            mauris vehicula, fermentum elit id, congue erat. Aliquam euismod orci neque, egestas tincidunt mi cursus eu.
+            Aenean
+            scelerisque metus non lacus dapibus maximus. Vivamus urna lorem, auctor ac erat at, luctus egestas quam. Nunc
+            a
+            velit lacus. Mauris blandit sem eu eros auctor, vel varius est iaculis. Proin commodo aliquet libero, eu
+            imperdiet
+            arcu commodo et. Maecenas molestie tristique enim nec ullamcorper. Nunc tempus massa nec tellus finibus, sed
+            consequat lorem vehicula. Proin pretium, libero at rhoncus rutrum, magna ante vehicula lectus, in semper enim
+            justo
+            sed erat.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
