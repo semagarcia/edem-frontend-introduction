@@ -16,6 +16,8 @@ ejercicio existe un fichero README.md que explica y aporta detalles sobre el con
 5. Proyecto NPM
 6. Simulando un backend: estáticos, API Rest y WebSocket
 7. Testing
+8. Librería de visualización de mapas
+9. Aplicación de escritorio
 
 ## Material necesario y requisitos
 
