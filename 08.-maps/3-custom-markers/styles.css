@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body { height: 100vh; }
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.legend {
+  border-bottom: 3px solid #38f;
+  display: flex;
+  justify-content: space-around;
+  padding: 16px;
+}
+.range {
+  align-items: center;
+  display: flex;
+}
+.color {
+  display: flex;
+  height: 16px;
+  width: 16px;
+}
+.older-1800 { background-color: #fad327; }
+.btw-1800-1900 { background-color: #cd364b; }
+.btw-1900-1950 { background-color: #9c2ccb; }
+.since-1950 { background-color: #2fab1e; }
+.label {
+  display: flex;
+  margin-left: 8px;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}

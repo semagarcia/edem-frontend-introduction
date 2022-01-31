@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDEM LeafLet Map</title>
+
+  <!-- Fonts -->
+  <link href="http://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JS libs -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div id="map"></div>
+  </div>
+  <script>
+    // Define a maps provider (optional, just for example)
+    const mapsProvider = {
+      OPEN_STREET: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      CARTO: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png',
+      MAPBOX: ''
+    };
+
+    // Create a reference to the map (variable)
+    const map = L.map('map', {
+      center: [39.4729, -0.365],
+      zoom: 14
+    });
+
+    // Create a main layer and add it to the previous created map
+    const mainTileLayer = L.tileLayer(mapsProvider.OPEN_STREET).addTo(map);
+  </script>
+</body>
+</html>

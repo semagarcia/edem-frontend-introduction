@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDEM LeafLet Map</title>
+
+  <!-- Fonts -->
+  <link href="http://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JS libs -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="legend">
+      <div class="range">
+        <div class="color older-1800"></div>
+        <div class="label">Antes de 1800</div>
+      </div>
+      <div class="range">
+        <div class="color btw-1800-1900"></div>
+        <div class="label">Entre 1800 y 1900</div>
+      </div>
+      <div class="range">
+        <div class="color btw-1900-1950"></div>
+        <div class="label">Entre 1900 y 1950</div>
+      </div>
+      <div class="range">
+        <div class="color since-1950"></div>
+        <div class="label">Posterior a 1950</div>
+      </div>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script>
+    let geoJsonData = {};
+    // L.map is the main API class, used to create and manage the map
+    // Short form => const map = L.map('map').setView([39.4629, -0.365], 14);
+    // Full initialization:
+    const map = L.map('map', {
+      center: [39.4729, -0.365],
+      minZoom: 5,
+      maxZoom: 20,
+      zoom: 14
+    });
+
+    // Add map layer (we already use a hardcoded provided just to simplify the example)
+    const mainTile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+    const historicalMonumentsLayer = L.layerGroup().addTo(map);
+
+
+    // Working with GeoJSON files & custom markers
+    // -----------------------------------------------------------------------------------------------
+    // Read file
+    fetch('arq-vlc.geojson')
+      .then(response => response.json())
+      .then(jsonData => {
+        console.log(jsonData);
+        geoJsonData = jsonData;
+        const monuments = L.geoJSON(geoJsonData, {
+          pointToLayer: pointToLayer  // Custom marker
+        });
+        historicalMonumentsLayer.addLayer(monuments);
+      })
+      .catch(error => console.log('Error loading GeoJSON!', error));
+
+    /**
+     * Convert each GeoJSON as custom marker (using colored markers)
+     */
+    const pointToLayer = (feature, latlng) => {
+      let popupContent = buildMonumentPopup(feature);
+      const lat = feature.geometry.coordinates[1];
+      const lon = feature.geometry.coordinates[0];
+      return L.marker([lat, lon], {
+        icon: coloredMarker(getMarkerColor(feature.properties.year))
+      }).bindPopup(popupContent).addTo(map)
+    };
+
+    /**
+     * Create or generate a custom colorized marker
+     */
+    const coloredMarker = iconColor => new L.Icon({
+      iconUrl: `markers/marker-icon-2x-${iconColor}.png`,
+      shadowUrl: 'images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    /**
+     * Function to build the popup shown on each monument marker
+     */
+    const buildMonumentPopup = (feature) => {
+      // Use destructuring in order to facilitate the access to the object
+      const {
+        title, description, styles, authors, link, year, credit, image
+      } = feature.properties;
+
+      let htmlPopup = `
+        <h1>${title}</h1>
+        ${description}
+        <br />
+      `;
+
+      if(styles) {
+        for(let i=0; i<styles.length; i++) {
+          const value = styles[i];
+          htmlPopup += `
+            <a href='#' onClick=\"return filterBy('art-styles', '${value}');\">
+              ${value}
+              <i class='fas fa-filter'></i>
+            </a>
+          `;
+        }
+        // Adds a final line break
+        htmlPopup += '<br />';
+      }
+
+      if(authors) {
+        for(let i=0; i<authors.length; i++) {
+          const value = authors[i];
+          htmlPopup += `
+            <a href='#' onClick=\"return filterBy('authors', '${value}');\">
+              ${value}
+              <i class='fas fa-filter'></i>
+            </a>
+          `;
+        }
+        // Adds a final line break
+        htmlPopup += '<br />';
+      }
+
+      // Add the rest of the fields
+      htmlPopup += `
+        Año de construcción: ${year}<br />
+        <a href="${link}" target="_blank">
+          <img class='image-popup' src="${image}" />
+        </a>
+        <br />
+        Fuente:
+        <a href="${link}" target="_blank">
+          ${credit}
+          <i class='fas fa-external-link-alt'></i>
+        </a>
+      `;
+      return htmlPopup;
+    };
+
+    /**
+     * Get the color for each category marker according to the year
+     */
+    const getMarkerColor = year => {
+      if(year < 1800) {
+        return 'gold';
+      } else if(year >= 1800 && year < 1900) {
+        return 'red';
+      } else if(year >= 1900 && year < 1950) {
+        return 'violet';
+      } else if(year >= 1950) {
+        return 'green';
+      }
+    };
+
+    /**
+     * TO BE IMPLEMENTED (just for example purpose)
+     * This method would filter the monuments according to the desired criteria
+     */
+    const filterBy = (criteria, value) => {
+      console.log(`User has clicked on criteria "${criteria}" with value: ${value}`);
+    };
+  </script>
+</body>
+</html>

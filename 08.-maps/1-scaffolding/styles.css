@@ -11,17 +11,14 @@ body { height: 100vh; }
   flex-direction: column;
   height: 100%;
 }
-
 .external-controls {
   border-bottom: 3px solid #38f;
   display: flex;
   padding: 16px;
 }
-
 .years {
   margin-left: 16px;
 }
-
 #map {
   height: 100%;
   width: 100%;

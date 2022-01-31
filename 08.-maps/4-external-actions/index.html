@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDEM LeafLet Map</title>
+
+  <!-- Fonts -->
+  <link href="http://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JS libs -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="external-controls">
+      <label for="years">Monumentos a mostrar:</label>
+      <select id="yearSelector" class="years" name="years">
+        <option value="all">Todos</option>
+        <option value="1800">Antes de 1800</option>
+        <option value="1800-1900">Entre 1800 y 1900</option>
+        <option value="1901-1950">Entre 1901 y 1950</option>
+        <option value="1950">A partir de 1950</option>
+      </select>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script>
+    let geoJsonData = {};
+
+    // Map initialization
+    // -----------------------------------------------------------------------------------------------
+    // L.map is the main API class, used to create and manage the map
+    // Short form => const map = L.map('map').setView([39.4629, -0.365], 14);
+    // Full initialization:
+    const map = L.map('map', {
+      center: [39.4729, -0.365],
+      minZoom: 5,
+      maxZoom: 20,
+      zoom: 14
+    });
+
+    // Add map layer (we already use a hardcoded provided just to simplify the example)
+    const mainTile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+    const historicalMonumentsLayer = L.layerGroup().addTo(map);
+
+
+    // Working with GeoJSON files
+    // -----------------------------------------------------------------------------------------------
+    // Read file
+    fetch('arq-vlc.geojson')
+      .then(response => response.json())
+      .then(jsonData => {
+        console.log(jsonData);
+        geoJsonData = jsonData;
+        const monuments = L.geoJSON(geoJsonData, {
+          onEachFeature: onEachFeature
+        });
+        historicalMonumentsLayer.addLayer(monuments);
+      })
+      .catch(error => console.log('Error loading GeoJSON!', error));
+
+    /**
+     * Function to render each GeoJSON element as a generic marker
+     */
+    const onEachFeature = (feature, layer) => {
+      // Use destructuring in order to facilitate the access to the object
+      const {
+        title, description, styles, authors, link, year, credit, image
+      } = feature.properties;
+
+      if (feature.properties && title) {
+        let htmlPopup = `
+          <h1>${title}</h1>
+          ${description}
+          <br />
+        `;
+
+        if(styles) {
+          htmlPopup += 'Estilo: ' + styles.join(', ');
+          htmlPopup += '<br />';
+        }
+
+        if(authors) {
+          // We could show the singular or plural
+          htmlPopup += (authors.length === 1) ? 'Autor/a: ' : 'Autores/as: ';
+          htmlPopup += authors.join(', ');
+          htmlPopup += '<br />';
+        }
+
+        // Add the rest of the fields
+        htmlPopup += `
+          Año de construcción: ${year}<br />
+          <a href="${link}" target="_blank">
+            <img class='image-popup' src="${image}" />
+          </a>
+          <br />
+          Fuente: <a href="${link}" target="_blank">${credit}</a>
+        `;
+
+        // Finally, bind the popup to the existing layer
+        layer.bindPopup(htmlPopup);
+      }
+    };
+
+    /**
+     * Event listener to act against the map from outside of the map
+     */
+    const yearSelector = document.getElementById('yearSelector');
+    yearSelector.addEventListener('change', (evt, e2) => {
+      const monuments = L.geoJSON(geoJsonData, {
+        onEachFeature: onEachFeature,
+        filter: (feature, layer) => {
+          // We can use "selectedIndex" or "value" properties from selector
+          switch(yearSelector.selectedIndex) {
+            case 0:  // All
+              return true;
+            case 1:  // Until 1800
+              return +feature.properties.year < 1800;
+            case 2:  // Between 1800 & 1899
+              return +feature.properties.year >= 1800 && +feature.properties.year < 1900;
+            case 3:  // Between 1900 & 1950
+              return +feature.properties.year >= 1900 && +feature.properties.year < 1950;
+            case 4:  // After 1951
+              return +feature.properties.year >= 1950;
+          }
+        }
+      });
+
+      // Remove layer and add the new ones
+      historicalMonumentsLayer.clearLayers();
+      historicalMonumentsLayer.addLayer(monuments);
+    });
+  </script>
+</body>
+</html>
