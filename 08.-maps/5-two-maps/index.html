@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDEM LeafLet Map</title>
+
+  <!-- Fonts -->
+  <link href="http://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JS libs -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.sync@0.2.4/L.Map.Sync.js"></script>
+</head>
+<body>
+  <div class="content-wrapper">
+    <div class="maps">
+      <div id="left-map"></div>
+      <div id="right-map"></div>
+    </div>
+  </div>
+  <script>
+    // Define a maps provider (optional, just for example)
+    const mapsProvider = {
+      OPEN_STREET: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      OPEN_TOPO_MAP: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
+    };
+
+    // Create a reference to the maps (variable)
+    const defaultMapCenter = [39.4729, -0.365];
+    const leftMap = L.map('left-map', { center: defaultMapCenter, zoom: 14 });
+    const rightMap = L.map('right-map', { center: defaultMapCenter, zoom: 14 });
+
+    // Create a main layer and add it to the previous created map
+    const leftMainTileLayer = L.tileLayer(mapsProvider.OPEN_STREET).addTo(leftMap);
+    const rightMainTileLayer = L.tileLayer(mapsProvider.OPEN_TOPO_MAP).addTo(rightMap);
+
+    // Sync maps (through an specific library that helps us)
+    leftMap.sync(rightMap);
+    rightMap.sync(leftMap);
+
+    // Listening events for adding markers when map/location is clicked
+    leftMap.on('click', evt => addMarkerOnClicked(evt, leftMap, rightMap));
+    rightMap.on('click', evt => addMarkerOnClicked(evt, leftMap, rightMap));
+
+    /**
+     * Method for adding a marker, both source map (clicked) and target map (synced)
+     */
+    const addMarkerOnClicked = (evt, sourceMap, targetMap) => {
+      L.marker(evt.latlng).addTo(sourceMap);
+      L.marker(evt.latlng).addTo(targetMap);
+    };
+  </script>
+</body>
+</html>
