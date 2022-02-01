@@ -13,6 +13,7 @@ En este ejemplo se ha creado la siguiente estructura para facilitar el aprendiza
 2. *Basic*
 3. *Custom Markers*
 4. *External actions*
+5. *Syncing maps*
 
 ### Scaffolding
 Este ejemplo contiene la estructura básica, mínima e imprescindible que puede ser utilizada para ejemplos más complejos.
@@ -45,6 +46,17 @@ Este ejemplo es muy parecido al anterior en cuanto al mapa se refiere. Sin embar
 Esto es así para poder añadir, en la parte superior del HTML (fuera del mapa y de los límites de la librería) un selector HTML o desplegable, que contiene los rangos de años del ejemplo anterior. En base a la selección del rango que haga el usuario, la página interactúa con el mapa, de forma que le envía "la instrucción" necesaria para que el mapa responda a esa opción escogida, y filtre los monumentos en base al año de construcción.
 
 De esta forma podemos ver un ejemplo de cómo interactuar con acciones personalizadas desde fuera, lo que permite una experiencia de usuario más rica y un desarrollo de funcionalidades mucho más potentes que complementen al propio mapa en sí.
+
+### Syncing maps
+Este ejemplo introduce una diferencia respecto a los anteriores: ahora, hay más de un mapa. Concretamente, dos en
+paralelo, uno al lado de otro, que están, además, sincronizados en sus acciones (zoom, mover mapa, añadir un marcador...),
+de modo que las acciones de uno se reflejan en el otro.
+
+Es posible realizar toda esta sincronización de forma programática, es decir, manualmente a través de nuestro propio
+código. Sin embargo, tal y como se ve durante la sesión, existen algunas librerías desrrolladas por la comunidad de
+developers que evitan repetir la misma lógica. Para ello, la librería escogida es
+[LeafletSync](https://github.com/jieter/Leaflet.Sync), y en el ejemplo se muestra cómo poder utilizarla, y añadir
+nuestra propia funcionalidad.
 
 ## Ampliación
 Este punto es uno de los más abiertos, ya que la propia librería en sí permite miles de posibilidades, y que la limitación, casi, será la propia imaginación.
